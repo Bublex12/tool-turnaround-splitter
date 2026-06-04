@@ -1,0 +1,8 @@
+.DS_Store
+Thumbs.db
+.vercel
+*.log
+.env
+.env.*
+views/
+turnaround.png

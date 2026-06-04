@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Turnaround Splitter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Teko:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a id="hub-link" class="nav-back label" href="#">← Все инструменты</a>
+      <p class="body secondary site-header__tag">2×3 · 6 ракурсов</p>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <h1 id="hero-title" class="display">Turnaround</h1>
+        <p class="hero__lead">
+          Загрузите лист с шестью ракурсами — получите отдельный PNG на каждый
+          вид: front, side, back и остальные.
+        </p>
+      </section>
+
+      <section class="tool" aria-labelledby="upload-title">
+        <h2 id="upload-title" class="h1">Загрузка</h2>
+
+        <div
+          id="dropzone"
+          class="dropzone card"
+          role="button"
+          tabindex="0"
+          aria-label="Выбрать изображение turnaround"
+        >
+          <input
+            id="file-input"
+            class="dropzone__input"
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            aria-hidden="true"
+          />
+          <p class="label">файл</p>
+          <p class="body dropzone__hint">
+            Перетащите PNG/JPG сюда или нажмите для выбора
+          </p>
+          <p id="file-name" class="body secondary dropzone__name" hidden></p>
+        </div>
+
+        <div id="source-wrap" class="source-wrap" hidden>
+          <p class="label">исходник</p>
+          <img id="source-preview" class="source-preview" alt="Исходный turnaround" />
+        </div>
+
+        <div class="tool__actions">
+          <button id="split-btn" class="button-primary" type="button" disabled>
+            Разрезать
+          </button>
+          <button id="download-all-btn" class="button-secondary" type="button" hidden>
+            Скачать все (ZIP)
+          </button>
+        </div>
+      </section>
+
+      <section
+        id="results"
+        class="results"
+        aria-labelledby="results-title"
+        hidden
+      >
+        <h2 id="results-title" class="h1">Ракурсы</h2>
+        <div id="views-grid" class="views-grid"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p class="body secondary">Обработка в браузере — файлы никуда не отправляются</p>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
