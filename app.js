@@ -10,15 +10,9 @@ const VIEW_NAMES = [
   "top_front",
 ];
 
-const isLocal =
-  location.hostname === "localhost" || location.hostname === "127.0.0.1";
-
 const hubLink = document.getElementById("hub-link");
 if (hubLink) {
-  const hubUrl = isLocal
-    ? window.TOOLS_HUB_LOCAL_URL ?? window.TOOLS_HUB_URL
-    : window.TOOLS_HUB_URL;
-  hubLink.href = hubUrl;
+  hubLink.href = window.TOOLS_HUB_URL;
 }
 
 const dropzone = document.getElementById("dropzone");
