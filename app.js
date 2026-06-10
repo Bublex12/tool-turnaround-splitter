@@ -1,5 +1,7 @@
 const ROWS = 2;
 const COLS = 3;
+const MAX_FILE_BYTES = 25 * 1024 * 1024;
+const MAX_IMAGE_PX = 8192;
 
 const VIEW_NAMES = [
   "front",
@@ -18,16 +20,41 @@ if (hubLink) {
 const dropzone = document.getElementById("dropzone");
 const fileInput = document.getElementById("file-input");
 const fileNameEl = document.getElementById("file-name");
+const fileMetaEl = document.getElementById("file-meta");
+const errorEl = document.getElementById("upload-error");
 const sourceWrap = document.getElementById("source-wrap");
 const sourcePreview = document.getElementById("source-preview");
 const splitBtn = document.getElementById("split-btn");
 const downloadAllBtn = document.getElementById("download-all-btn");
 const resultsSection = document.getElementById("results");
 const viewsGrid = document.getElementById("views-grid");
+const toastEl = document.getElementById("toast");
 
 let loadedImage = null;
 let sourceObjectUrl = null;
 let currentViews = [];
+
+function showToast(message) {
+  if (!toastEl) return;
+  toastEl.textContent = message;
+  toastEl.hidden = false;
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => {
+    toastEl.hidden = true;
+  }, 2200);
+}
+
+function showError(message) {
+  if (!errorEl) return;
+  errorEl.textContent = message;
+  errorEl.hidden = !message;
+}
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 function loadImageFromFile(file) {
   return new Promise((resolve, reject) => {
@@ -94,7 +121,7 @@ function downloadBlob(blob, filename) {
 }
 
 function renderViews(views) {
-  viewsGrid.innerHTML = "";
+  viewsGrid.replaceChildren();
 
   views.forEach((view) => {
     const card = document.createElement("article");
@@ -117,6 +144,7 @@ function renderViews(views) {
       const blob = view.blob ?? (await canvasToBlob(view.canvas));
       view.blob = blob;
       downloadBlob(blob, `${view.name}.png`);
+      showToast(`Скачан ${view.name}.png`);
     });
 
     card.append(label, preview, btn);
@@ -127,7 +155,15 @@ function renderViews(views) {
 }
 
 async function handleFile(file) {
+  showError("");
+
   if (!file || !file.type.startsWith("image/")) {
+    showError("Нужен файл изображения (PNG, JPG, WebP).");
+    return;
+  }
+
+  if (file.size > MAX_FILE_BYTES) {
+    showError(`Файл слишком большой (макс. ${formatBytes(MAX_FILE_BYTES)}).`);
     return;
   }
 
@@ -136,14 +172,30 @@ async function handleFile(file) {
 
   try {
     loadedImage = await loadImageFromFile(file);
+
+    if (
+      loadedImage.naturalWidth > MAX_IMAGE_PX ||
+      loadedImage.naturalHeight > MAX_IMAGE_PX
+    ) {
+      showError(`Слишком большое разрешение (макс. ${MAX_IMAGE_PX}px по стороне).`);
+      loadedImage = null;
+      return;
+    }
+
+    if (fileMetaEl) {
+      fileMetaEl.textContent = `${loadedImage.naturalWidth}×${loadedImage.naturalHeight} · ${formatBytes(file.size)}`;
+      fileMetaEl.hidden = false;
+    }
+
     sourcePreview.src = sourceObjectUrl;
     sourceWrap.hidden = false;
     splitBtn.disabled = false;
     resultsSection.hidden = true;
     downloadAllBtn.hidden = true;
     currentViews = [];
+    showToast("Изображение загружено");
   } catch {
-    alert("Не удалось открыть файл. Попробуйте другой формат.");
+    showError("Не удалось открыть файл. Попробуйте другой формат.");
   }
 }
 
@@ -165,6 +217,7 @@ async function runSplit() {
   downloadAllBtn.hidden = false;
   splitBtn.disabled = false;
   splitBtn.textContent = "Разрезать";
+  showToast("Готово — 6 ракурсов");
 }
 
 async function downloadAllZip() {
@@ -181,6 +234,7 @@ async function downloadAllZip() {
 
   const blob = await zip.generateAsync({ type: "blob" });
   downloadBlob(blob, "views.zip");
+  showToast("Скачан views.zip");
 }
 
 dropzone.addEventListener("click", () => fileInput.click());

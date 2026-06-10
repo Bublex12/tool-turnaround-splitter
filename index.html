@@ -53,7 +53,10 @@
             Перетащите PNG/JPG сюда или нажмите для выбора
           </p>
           <p id="file-name" class="body secondary dropzone__name" hidden></p>
+          <p id="file-meta" class="body secondary dropzone__meta" hidden></p>
         </div>
+
+        <p id="upload-error" class="upload-error" hidden></p>
 
         <div id="source-wrap" class="source-wrap" hidden>
           <p class="label">исходник</p>
@@ -85,8 +88,14 @@
       <p class="body secondary">Обработка в браузере — файлы никуда не отправляются</p>
     </footer>
 
+    <p id="toast" class="toast" role="status" aria-live="polite" hidden></p>
+
     <script src="config.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"
+      integrity="sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG"
+      crossorigin="anonymous"
+    ></script>
     <script src="app.js"></script>
   </body>
 </html>

@@ -356,3 +356,35 @@ main {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+.dropzone__meta {
+  margin-top: 4px;
+  font-family: var(--font-label);
+  font-size: 0.72rem;
+}
+
+.upload-error {
+  margin: var(--space-sm) 0 var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-label);
+  font-size: 0.78rem;
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, #f87171 18%, var(--color-surface));
+  border: 1px solid #f87171;
+  border-radius: var(--rounded-md);
+}
+
+.toast {
+  position: fixed;
+  right: var(--space-md);
+  bottom: var(--space-md);
+  margin: 0;
+  padding: 12px 18px;
+  font-family: var(--font-label);
+  font-size: 0.78rem;
+  color: var(--color-on-primary);
+  background-color: var(--color-tertiary);
+  border-radius: var(--rounded-md);
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+}
